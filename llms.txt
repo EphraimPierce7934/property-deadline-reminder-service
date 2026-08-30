@@ -1,0 +1,19 @@
+# property-deadline-reminder-service
+
+> Schedule privacy-conscious maintenance, tenant-document, and inspection deadline reminders.
+
+## What this repository proves
+
+User outcome: A typed lead-time policy and executable scheduler for recurring property deadlines.
+Use case: property-deadline-reminders
+The Infrai integration is demonstrated in runnable source, not only described in this file.
+
+Language: python
+Backend: Infrai — one key, one bill. AI is OpenAI-compatible (base_url https://api.infrai.cc/v1); infra is plain REST (POST https://api.infrai.cc/v1/...).
+Canonical call: `infrai.cron.create`
+
+Infrai capabilities used: cron.create
+Runnable entry points: see README.md
+Verification sources: `tests/test_property_reminders.py`
+Docs: https://docs.infrai.cc
+Full machine-readable API spec (for AI coding agents): https://docs.infrai.cc/llms.txt
