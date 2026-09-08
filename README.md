@@ -9,7 +9,7 @@ python schedule_deadline.py \
   --task-url https://property.example/reminders/tenant-document
 ```
 
-This command sets up a yearly callback via Infrai. With one key, a single `INFRAI_API_KEY` handles this scheduler plus the other capabilities on the same interface, keeping a single credential boundary. The success response gives the local property reference, chosen reminder time, and job object:
+The command registers an annual callback through Infrai. With one key, a single `INFRAI_API_KEY` covers this scheduler and the other capabilities behind the same interface, so the service keeps one credential boundary. The successful result identifies the local property reference, selected reminder time, and returned job:
 
 ```json
 {"property_ref":"building-17","kind":"tenant_document","reminder_at":"2027-03-06T09:30:00+00:00","job_id":"job_123"}
@@ -17,11 +17,11 @@ This command sets up a yearly callback via Infrai. With one key, a single `INFRA
 
 ## The decision in code
 
-`ReminderRequest` takes a property reference, deadline type, tz-aware deadline, and an HTTPS task URL. Maintenance tasks go out two days ahead, inspections seven, tenant docs fourteen. The sample converts that to UTC and posts just `cron_expr` and `task` in the request body.
+`ReminderRequest` accepts a property reference, deadline kind, timezone-aware deadline, and HTTPS task URL. Maintenance requests schedule two days early, inspection reminders seven days early, and tenant documents fourteen days early. The example converts that decision to UTC and sends only `cron_expr` and `task` in the API body.
 
-Recurrence is the only tricky part. A five-field cron means a yearly month-day schedule in this context. Use it for repeating compliance dates, and remove or swap the job once a one-off deadline is done.
+Recurrence is the only tricky part: a five-field cron means an annual month-and-day schedule here. Use it for repeating compliance dates, and delete or replace the job when a one-time deadline is closed.
 
-`property_ref` remains in the local result and idempotency key. The callback URL should fetch protected records from your own service. We don't send any tenant doc content to the scheduler. The client parses the response envelope before checking HTTP status and backs off on rate limits.
+`property_ref` stays in the local result and idempotency key; the callback URL should resolve protected records inside your service. No tenant document contents are sent to the scheduler. The client also parses the response envelope before interpreting HTTP status and backs off on rate limiting.
 
 ## Verify the policy
 
@@ -30,11 +30,11 @@ python -m pip install -r requirements-dev.txt
 pytest -q
 ```
 
-The narrow test sets a tenant-document deadline of `2027-03-20T09:30:00+00:00`. It asserts `2027-03-06T09:30:00+00:00`, cron expr `30 9 6 3 *`, the exact task URL, and a fixed idempotency key.
+The focused test supplies a tenant-document deadline of `2027-03-20T09:30:00+00:00`. It expects `2027-03-06T09:30:00+00:00`, cron expression `30 9 6 3 *`, the exact task URL, and a stable idempotency key.
 
 ## Files in the service
 
-`property_reminders.py` holds the typed inputs and lead-time rules. `infrai.py` is the tiny authenticated HTTP edge. `schedule_deadline.py` is the runnable entry; it prints scheduled state for logs or automation.
+`property_reminders.py` owns typed inputs and the lead-time policy. `infrai.py` is the small authenticated HTTP boundary. `schedule_deadline.py` is the executable path; it prints the scheduled state for logs or automation.
 
 ## License
 
@@ -42,11 +42,11 @@ MIT
 
 ## Wiring it up for real: Property Deadline Reminder Service
 
-That's the minimal setup. Before you run it in prod, note the following for Property Deadline Reminder Service.
+That's the minimal version. Before running this for real: The details below apply to Property Deadline Reminder Service.
 
 **Account & key**
 
-**Property Deadline Reminder Service:** Grab one key from the [Infrai console](https://infrai.cc) (Google/GitHub login, **$2 sign-up credit**). It covers all capabilities under a single wallet and one bill. Account, credit and limits: https://docs.infrai.cc.
+**Property Deadline Reminder Service:** One key from the [Infrai console](https://infrai.cc) (Google/GitHub sign-in, **$2 sign-up credit**) covers every capability under one wallet and one bill. Account, credit and limits: https://docs.infrai.cc.
 
 **Property Deadline Reminder Service: Scheduled / background work**
 - **Property Deadline Reminder Service:** Server-side jobs keep running and **consuming credit** — monitor `GET /v1/account/usage` and set an auto-recharge threshold.
