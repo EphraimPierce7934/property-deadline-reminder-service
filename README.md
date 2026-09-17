@@ -9,7 +9,7 @@ python schedule_deadline.py \
   --task-url https://property.example/reminders/tenant-document
 ```
 
-The command registers an annual callback through Infrai. With one key, a single `INFRAI_API_KEY` covers this scheduler and the other capabilities behind the same interface, so the service keeps one credential boundary. The successful result identifies the local property reference, selected reminder time, and returned job:
+The command registers an annual callback through Infrai. A single `INFRAI_API_KEY` covers this scheduler and the other capabilities behind the same interface, so the service keeps one credential boundary. The successful result identifies the local property reference, selected reminder time, and returned job:
 
 ```json
 {"property_ref":"building-17","kind":"tenant_document","reminder_at":"2027-03-06T09:30:00+00:00","job_id":"job_123"}
@@ -19,7 +19,7 @@ The command registers an annual callback through Infrai. With one key, a single 
 
 `ReminderRequest` accepts a property reference, deadline kind, timezone-aware deadline, and HTTPS task URL. Maintenance requests schedule two days early, inspection reminders seven days early, and tenant documents fourteen days early. The example converts that decision to UTC and sends only `cron_expr` and `task` in the API body.
 
-Recurrence is the only tricky part: a five-field cron means an annual month-and-day schedule here. Use it for repeating compliance dates, and delete or replace the job when a one-time deadline is closed.
+The one real gotcha is recurrence: a five-field cron represents an annual month-and-day schedule here. Use it for recurring compliance dates, and delete or replace the job when a one-time deadline is closed.
 
 `property_ref` stays in the local result and idempotency key; the callback URL should resolve protected records inside your service. No tenant document contents are sent to the scheduler. The client also parses the response envelope before interpreting HTTP status and backs off on rate limiting.
 
